@@ -1,7 +1,7 @@
 {
-  "name": "ChainedEventEmitter",
+  "name": "chained-emitter",
   "version": "0.1.0",
-  "description": "ChainedEventEmitter is a an implementation of the EventEmitter found in Node.js, based on EventEmitter2, but adding the ability to return a promise in an event handler.",
+  "description": "chained-emitter is a an implementation of the EventEmitter found in Node.js, based on EventEmitter2, but adding the ability to return a promise in an event handler.",
   "keywords": [
     "event",
     "events",
@@ -24,11 +24,11 @@
       "type": "MIT"
     }
   ],
-  "homepage": "https://github.com/hildjj/ChainedEventEmitter",
+  "homepage": "https://github.com/hildjj/chained-emitter",
   "repositories": [
     {
       "type": "git",
-      "url": "git://github.com/hildjj/ChainedEventEmitter.git"
+      "url": "git://github.com/hildjj/chained-emitter.git"
     }
   ],
   "devDependencies": {
