@@ -5,7 +5,7 @@ var suite = new Benchmark.Suite();
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter;
 
-var EventEmitter2 = require('../../lib/eventemitter2').EventEmitter2;
+var EventEmitter2 = require('../../lib/ChainedEventEmitter').EventEmitter;
 var emitter2 = new EventEmitter2;
 
 var EventEmitter3 = require('events').EventEmitter;

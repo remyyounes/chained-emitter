@@ -22,7 +22,7 @@
 
 var common = require('../common');
 var assert = require('assert');
-var EventEmitter = require('../../lib/eventemitter2').EventEmitter2;
+var EventEmitter = require('../../lib/ChainedEventEmitter').EventEmitter;
 
 var e = new EventEmitter({wildcard: true});
 var countWildcard = 0;

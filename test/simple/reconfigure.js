@@ -1,18 +1,18 @@
 var simpleEvents = require('nodeunit').testCase;
-var file = '../../lib/eventemitter2';
-var EventEmitter2;
+var file = '../../lib/ChainedEventEmitter';
+var EventEmitter;
 
 if(typeof require !== 'undefined') {
-  EventEmitter2 = require(file).EventEmitter2;
+  EventEmitter = require(file).EventEmitter;
 }
 else {
-  EventEmitter2 = window.EventEmitter2;
+  EventEmitter = window.EventEmitter;
 }
 
 module.exports = simpleEvents({
 
   'reconfigure1. initialize, removeAllListeners' : function (test) {
-    
+
     var emitter,
         config = {
           wildcard: true, // should the event emitter use wildcards.
@@ -20,7 +20,7 @@ module.exports = simpleEvents({
           maxListeners: 20 // the max number of listeners that can be assigned to an event, defaults to 10.
       };
 
-    emitter = new EventEmitter2(config);
+    emitter = new EventEmitter(config);
 
     emitter.removeAllListeners();
 
@@ -38,7 +38,7 @@ module.exports = simpleEvents({
     var emitter,
         amount = 99;
 
-    emitter = new EventEmitter2();
+    emitter = new EventEmitter();
 
     emitter.setMaxListeners(amount);
 

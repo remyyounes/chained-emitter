@@ -1,53 +1,57 @@
 
 var simpleEvents = require('nodeunit').testCase;
-var file = '../../lib/eventemitter2';
-var EventEmitter2;
+var file = '../../lib/ChainedEventEmitter';
+var EventEmitter;
 
 if(typeof require !== 'undefined') {
-  EventEmitter2 = require(file).EventEmitter2;
+  EventEmitter = require(file).EventEmitter;
 }
 else {
-  EventEmitter2 = window.EventEmitter2;
+  EventEmitter = window.EventEmitter;
 }
 
 module.exports = simpleEvents({
 
   '1. A listener added with `once` should only listen once and then be removed.': function (test) {
-    
-    var emitter = new EventEmitter2();
+
+    var emitter = new EventEmitter();
 
     emitter.once('test1', function () {
       test.ok(true, 'The event was raised once');
     });
 
-    emitter.emit('test1');
-    emitter.emit('test1');
-
-    test.expect(1);
-    test.done();
-
+    emitter.emit('test1').then(function(fired){
+      test.ok(fired, 'the first handler was called');
+      emitter.emit('test1').then(function(fired){
+        test.ok(!fired, 'the second handler was not called');
+        test.expect(3);
+        test.done();
+      })
+    })
   },
   '2. A listener with a TTL of 4 should only listen 4 times.': function (test) {
 
-    var emitter = new EventEmitter2();
+    var emitter = new EventEmitter();
 
     emitter.many('test1', 4, function (value1) {
       test.ok(true, 'The event was raised 4 times.');
     });
 
-    emitter.emit('test1', 1);
-    emitter.emit('test1', 2);
-    emitter.emit('test1', 3);
-    emitter.emit('test1', 4);
-    emitter.emit('test1', 5);
-
-    test.expect(4);
-    test.done();
-
+    var p = emitter.emit('test1', 0);
+    for (var i=1; i<5; i++) {
+      p = p.then(function(fired) {
+        emitter.emit('test1', i);
+      });
+    }
+    p.then(function(fired) {
+      test.ok(!fired, "The last one shouldn't fire")
+      test.expect(5);
+      test.done();
+    });
   },
   '3. A listener with a TTL of 4 should only listen 4 times and pass parameters.': function (test) {
 
-    var emitter = new EventEmitter2();
+    var emitter = new EventEmitter();
 
     emitter.many('test1', 4, function (value1, value2, value3) {
       test.ok(typeof value1 !== 'undefined', 'got value 1');
@@ -66,7 +70,7 @@ module.exports = simpleEvents({
   },
   '4. Remove an event listener by signature.': function (test) {
 
-    var emitter = new EventEmitter2();
+    var emitter = new EventEmitter();
     var count = 0;
 
     function f1(event) {
@@ -75,12 +79,12 @@ module.exports = simpleEvents({
     }
 
     emitter.on('test1', f1);
-    
+
     function f2(event) {
       "event B";
-      test.ok(true, 'The event was raised less than 3 times.');  
-    }    
-    
+      test.ok(true, 'The event was raised less than 3 times.');
+    }
+
     emitter.on('test1', f2);
 
     function f3(event) {
@@ -92,15 +96,15 @@ module.exports = simpleEvents({
 
     emitter.removeListener('test1', f2);
 
-    emitter.emit('test1');
+    emitter.emit('test1').then(function() {
+      test.expect(2);
+      test.done();
 
-    test.expect(2);
-    test.done();
-
+    });
   },
   '5. `removeListener` and `once`': function(test) {
 
-    var emitter = new EventEmitter2();
+    var emitter = new EventEmitter();
     var functionA = function() { test.ok(true, 'Event was fired'); };
 
     emitter.once('testA', functionA);
@@ -111,5 +115,5 @@ module.exports = simpleEvents({
     test.expect(0);
     test.done();
   }
-  
+
 });

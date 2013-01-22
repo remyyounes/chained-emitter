@@ -1,20 +1,20 @@
 
 var simpleEvents= require('nodeunit').testCase;
-var file = '../../lib/eventemitter2';
-var EventEmitter2;
+var file = '../../lib/ChainedEventEmitter';
+var EventEmitter;
 
 if(typeof require !== 'undefined') {
-  EventEmitter2 = require(file).EventEmitter2;
+  EventEmitter = require(file).EventEmitter;
 }
 else {
-  EventEmitter2 = window.EventEmitter2;
+  EventEmitter = window.EventEmitter;
 }
 
 module.exports = simpleEvents({
 
   'setMaxListener1. default behavior of 10 listeners.' : function (test) {
 
-    var emitter = new EventEmitter2;
+    var emitter = new EventEmitter;
 
     for (var i = 0; i < 10; i++) {
       emitter.on('foobar', function () {
@@ -31,7 +31,7 @@ module.exports = simpleEvents({
 
   'setMaxListener2. If we added more than 10, should not see them' : function (test) {
 
-    var emitter = new EventEmitter2;
+    var emitter = new EventEmitter;
 
     for (var i = 0; i < 10 ; i++) {
       emitter.on('foobar2', function () {
@@ -53,7 +53,7 @@ module.exports = simpleEvents({
 
   'setMaxListener3. if we set maxListener to be greater before adding' : function (test) {
 
-    var emitter = new EventEmitter2;
+    var emitter = new EventEmitter;
     var type = 'foobar3';
 
     // set to 20
@@ -75,7 +75,7 @@ module.exports = simpleEvents({
 
   'setMaxListener4. should be able to change it right at 10' : function (test) {
 
-    var emitter = new EventEmitter2;
+    var emitter = new EventEmitter;
     var type = 'foobar4';
 
     for (var i = 0; i < 10 ; i++) {
@@ -99,7 +99,7 @@ module.exports = simpleEvents({
 
   'setMaxListener5. if we set maxListener to be 0 should add endlessly' : function (test) {
 
-    var emitter = new EventEmitter2;    
+    var emitter = new EventEmitter;
     var type = 'foobar';
 
     // set to 0
@@ -119,15 +119,15 @@ module.exports = simpleEvents({
     test.done();
   },
   'maxListeners parameter. Passing maxListeners as a parameter should override default.' : function (test) {
-    
-    var emitter = new EventEmitter2({
+
+    var emitter = new EventEmitter({
       maxListeners: 2
     });
 
     console.log(emitter, test.equal, test.ok);
     emitter.on('a', function () {});
     emitter.on('a', function () {});
-    emitter.on('a', function () {});    
+    emitter.on('a', function () {});
     test.ok(emitter._events.a.warned,
       '.on() should warn when maxListeners is exceeded.');
     test.done();
